@@ -1,0 +1,63 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'com.ofg.uptodate'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "mobi.cwiklinski.smog"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile "com.android.support:support-v4:$support_version"
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:design:$support_version"
+    compile "com.android.support:cardview-v7:$support_version"
+    compile "me.henrytao:mdcore:1.9.11"
+    compile "com.github.kayvannj:PermissionUtils:1.0.2@aar"
+    compile "com.squareup.okhttp:okhttp:2.6.0"
+    compile "de.greenrobot:eventbus:2.4.1"
+    compile "com.github.orhanobut:hawk:1.20"
+    compile "com.joanzapata.iconify:android-iconify-typicons:2.1.0"
+    compile "com.facebook.android:facebook-android-sdk:4.8.2"
+    compile "com.github.blackfizz:eazegraph:1.2.5l@aar"
+    compile "com.nineoldandroids:library:2.4.0"
+    compile "me.zhanghai.android.materialprogressbar:library:1.1.4"
+    compile "com.github.kittinunf.fuel:fuel-android:0.62"
+
+    // Kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+
+
+    testCompile 'junit:junit:4.12'
+}
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
+    }
+}
+repositories {
+    mavenCentral()
+}

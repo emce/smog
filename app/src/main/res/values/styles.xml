@@ -1,0 +1,93 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:textViewStyle">@style/TextView</item>
+        <item name="toolbarStyle">@style/Toolbar</item>
+    </style>
+
+    <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/primary</item>
+        <item name="titleTextAppearance">@style/Toolbar.Title</item>
+        <item name="navigationIcon">@drawable/ic_bus_yellow</item>
+        <item name="contentInsetLeft">@dimen/margin_small</item>
+        <item name="contentInsetRight">@dimen/margin_small</item>
+    </style>
+
+    <style name="Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/text_large</item>
+    </style>
+
+    <style name="TextView" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">@dimen/text_big</item>
+    </style>
+
+    <style name="Card" />
+
+    <style name="Card.Header" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:padding">@dimen/margin_tiny</item>
+        <item name="android:textSize">@dimen/text_large</item>
+        <item name="android:textColor">@color/text_alter</item>
+        <item name="android:gravity">left|center_vertical</item>
+    </style>
+
+    <style name="Card.Value" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:padding">@dimen/margin_tiny</item>
+        <item name="android:textSize">@dimen/text_large</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">left|center_vertical</item>
+    </style>
+
+    <style name="Card.Time" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:padding">@dimen/margin_tiny</item>
+        <item name="android:textSize">@dimen/text_normal</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="AppWidget" />
+
+    <style name="AppWidget.Label" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/primary_light</item>
+        <item name="android:layout_gravity">center_horizontal|bottom</item>
+    </style>
+
+    <style name="AppWidget.Container">
+        <item name="android:minWidth">@dimen/widget_top_height</item>
+        <item name="android:padding">@dimen/margin_tiny</item>
+    </style>
+
+    <style name="AppWidget.Value" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">@dimen/text_huge</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_marginBottom">@dimen/margin_tiny</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowColor">@android:color/white</item>
+    </style>
+
+    <style name="AppWidget.Time" parent="AppWidget.Label">
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_horizontal|top</item>
+    </style>
+
+    <style name="ProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress</item>
+        <item name="android:maxHeight">@dimen/margin_tiny</item>
+        <item name="android:minHeight">@dimen/margin_tiny</item>
+    </style>
+
+</resources>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:baselineAligned="false">
+
+    <FrameLayout
+        style="@style/AppWidget.Container"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/primary">
+
+        <TextView
+            android:id="@+id/widgetTime0"
+            style="@style/AppWidget.Time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/value_zero" />
+
+        <TextView
+            style="@style/AppWidget.Value"
+            android:id="@+id/widgetValue0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/value_zero" />
+
+        <TextView
+            style="@style/AppWidget.Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_station_0" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        style="@style/AppWidget.Container"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/primary_dark">
+
+        <TextView
+            android:id="@+id/widgetTime1"
+            style="@style/AppWidget.Time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/value_zero" />
+
+        <TextView
+            style="@style/AppWidget.Value"
+            android:id="@+id/widgetValue1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/value_zero" />
+
+        <TextView
+            style="@style/AppWidget.Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_station_1" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        style="@style/AppWidget.Container"
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/primary">
+
+        <TextView
+            android:id="@+id/widgetTime2"
+            style="@style/AppWidget.Time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/value_zero" />
+
+        <TextView
+            style="@style/AppWidget.Value"
+            android:id="@+id/widgetValue2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/value_zero" />
+
+        <TextView
+            style="@style/AppWidget.Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_station_2" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        style="@style/AppWidget.Container"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@color/primary_dark">
+
+        <ImageView
+            android:id="@+id/widgetImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_small"
+            android:scaleType="center"
+            android:src="@drawable/ic_bus_yellow"
+            android:layout_gravity="center"
+            android:contentDescription="@string/app_name" />
+
+    </FrameLayout>
+
+</LinearLayout>
