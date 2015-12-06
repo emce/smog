@@ -2,7 +2,6 @@ package mobi.cwiklinski.smog.ui.activity
 
 import android.content.Intent
 import android.database.Cursor
-import android.database.DatabaseUtils
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.LayerDrawable
@@ -23,7 +22,6 @@ import com.facebook.share.widget.ShareDialog
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.TypiconsIcons
 import kotlinx.android.synthetic.activity_main.*
-import mobi.cwiklinski.bloodline.ui.extension.d
 import mobi.cwiklinski.bloodline.ui.extension.setToolbar
 import mobi.cwiklinski.bloodline.ui.extension.startLoader
 import mobi.cwiklinski.smog.R
@@ -32,8 +30,10 @@ import mobi.cwiklinski.smog.database.AppContract
 import mobi.cwiklinski.smog.database.Reading
 import mobi.cwiklinski.smog.service.ReadingService
 import mobi.cwiklinski.smog.ui.WidgetProvider
+import org.eazegraph.lib.models.LegendModel
 import org.eazegraph.lib.models.ValueLinePoint
 import org.eazegraph.lib.models.ValueLineSeries
+import org.joda.time.DateTime
 import java.util.*
 
 class MainActivity : LoaderManager.LoaderCallbacks<Cursor>, AppCompatActivity() {
@@ -93,16 +93,19 @@ class MainActivity : LoaderManager.LoaderCallbacks<Cursor>, AppCompatActivity() 
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor>? {
         var loader = CursorLoader(this)
+        var date = DateTime()
         when (id) {
             Constants.LOADER_LATEST -> {
                 loader.uri = AppContract.Readings.CONTENT_URI
-                loader.sortOrder =  "${AppContract.Readings.YEAR} DESC, ${AppContract.Readings.MONTH} DESC,"+
-                    " ${AppContract.Readings.DAY} DESC, ${AppContract.Readings.HOUR} DESC lIMIT 3"
+                loader.selection = "${AppContract.Readings.YEAR}=? AND ${AppContract.Readings.MONTH}=? AND ${AppContract.Readings.DAY}=?"
+                loader.selectionArgs = arrayOf(date.year().get().toString(), date.monthOfYear().get().toString(), date.dayOfMonth().get().toString())
+                loader.sortOrder =  "${AppContract.Readings.DAY} DESC, ${AppContract.Readings.HOUR} DESC LIMIT 3"
             }
             Constants.LOADER_GRAPH -> {
                 loader.uri = AppContract.Readings.CONTENT_URI
-                loader.sortOrder =  "${AppContract.Readings.YEAR} DESC, ${AppContract.Readings.MONTH} DESC,"+
-                        " ${AppContract.Readings.DAY} DESC, ${AppContract.Readings.HOUR} DESC lIMIT 30"
+                loader.selection = "${AppContract.Readings.YEAR}=? AND ${AppContract.Readings.MONTH}=? AND ${AppContract.Readings.DAY}=?"
+                loader.selectionArgs = arrayOf(date.year().get().toString(), date.monthOfYear().get().toString(), date.dayOfMonth().get().toString())
+                loader.sortOrder =  "${AppContract.Readings.DAY} DESC, ${AppContract.Readings.HOUR} ASC LIMIT 30"
             }
         }
         return loader
@@ -130,24 +133,18 @@ class MainActivity : LoaderManager.LoaderCallbacks<Cursor>, AppCompatActivity() 
                             mainAmount0.text = getString(R.string.value_value).format(it.amount)
                             mainValue0.max = max
                             mainValue0.progress = it.amount
-                            setProgressColor(it.color, mainValue0)
-                            mainAmount0.setTextColor(Color.parseColor("#${it.color}"))
                         }
                         Constants.Place.NOWA_HUTA.ordinal -> {
                             mainTime1.text = "${it.hour}.00"
                             mainAmount1.text = getString(R.string.value_value).format(it.amount)
                             mainValue1.max = max
                             mainValue1.progress = it.amount
-                            setProgressColor(it.color, mainValue1)
-                            mainAmount1.setTextColor(Color.parseColor("#${it.color}"))
                         }
                         Constants.Place.KURDWANOW.ordinal -> {
                             mainTime2.text = "${it.hour}.00"
                             mainAmount2.text = getString(R.string.value_value).format(it.amount)
                             mainValue2.max = max
                             mainValue2.progress = it.amount
-                            setProgressColor(it.color, mainValue2)
-                            mainAmount2.setTextColor(Color.parseColor("#${it.color}"))
                         }
                     }
                 }
@@ -175,6 +172,12 @@ class MainActivity : LoaderManager.LoaderCallbacks<Cursor>, AppCompatActivity() 
                     }
                 }
                 if (series0.series.size > 1) {
+                    var legends = listOf(
+                        LegendModel(getString(R.string.station_0)),
+                        LegendModel(getString(R.string.station_1)),
+                        LegendModel(getString(R.string.station_2))
+                    )
+                    mainChart.addLegend(legends)
                     mainChart.addSeries(series0)
                     mainChart.addSeries(series1)
                     mainChart.addSeries(series2)
@@ -185,7 +188,7 @@ class MainActivity : LoaderManager.LoaderCallbacks<Cursor>, AppCompatActivity() 
     }
 
     private fun setProgressColor(color: String?, progress: ProgressBar) {
-        if (!color!!.isEmpty()) {
+        if (color != null && !color!!.isEmpty()) {
             if (progress.progressDrawable!! is LayerDrawable) {
                 var layerDrawable = progress.progressDrawable as LayerDrawable;
                 var progressDrawable = layerDrawable.findDrawableByLayerId(android.R.id.progress)

@@ -12,15 +12,18 @@ import mobi.cwiklinski.bloodline.ui.extension.d
 import mobi.cwiklinski.bloodline.ui.extension.e
 import mobi.cwiklinski.smog.config.Constants
 import mobi.cwiklinski.smog.database.AppContract
-import mobi.cwiklinski.smog.network.PersistentCookieStore
 import mobi.cwiklinski.smog.ui.WidgetProvider
+import org.joda.time.DateTime
 import org.json.JSONArray
-import java.net.*
+import org.json.JSONObject
+import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 class ReadingService : IntentService(ReadingService::class.java.simpleName) {
+
+    val MEDIA_TYPE_MARKDOWN = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
 
     companion object {
         fun refresh(context: Context) {
@@ -93,9 +96,9 @@ class ReadingService : IntentService(ReadingService::class.java.simpleName) {
     }
 
     private fun fetchDay() {
-        var query: String = URLEncoder.encode("{'measType':'Auto','viewType':'Parameter','dateRange':'Day','date':'29.11.2015','viewTypeEntityId':'pm10','channels':[46,148,57]}", "utf-8")
+        val batch = ArrayList<ContentProviderOperation>()
+        var query: String = "{\"measType\":\"Auto\",\"viewType\":\"Parameter\",\"dateRange\":\"Day\",\"date\":\"${Constants.REFRESH_DATE_FORMAT.format(Date())}\",\"viewTypeEntityId\":\"pm10\",\"channels\":[46,148,57]}"
         var headers = mapOf(
-                Pair("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8"),
                 Pair("Accept", "application/json, text/javascript, */*; q=0.01"),
                 Pair("Origin", "http://monitoring.krakow.pios.gov.pl"),
                 Pair("Accept-Language", "pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4"),
@@ -105,22 +108,47 @@ class ReadingService : IntentService(ReadingService::class.java.simpleName) {
                 Pair("Connection", "keep-alive"),
                 Pair("Cookie", "cookiesAccepted=yes; PHPSESSID=kpun7dv7e1hrgjgtspmv257o84; start_selector_nth=0; start_selector_hide=yes")
         )
-        var getRequest = Request.Builder().url("http://monitoring.krakow.pios.gov.pl/dane-pomiarowe/automatyczne").build()
-        getClient().newCall(getRequest).execute()
-
+        d(headers.toString())
         var requestBuilder = Request.Builder().url(Constants.URL_ARCHIVE)
         headers.forEach {
             requestBuilder.addHeader(it.key, it.value)
         }
-        requestBuilder.post(RequestBody.create(
-                MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8"), "query=$query"))
+        requestBuilder.post(RequestBody.create(MEDIA_TYPE_MARKDOWN, "query=$query"))
         var response = getClient().newCall(requestBuilder.build()).execute()
-        d(response!!.request().headers().toString())
-        d(response.headers().toString())
-        d(response.body()!!.string())
-        // curl 'http://monitoring.krakow.pios.gov.pl/dane-pomiarowe/pobierz' -H 'Cookie: cookiesAccepted=yes; PHPSESSID=kpun7dv7e1hrgjgtspmv257o84; start_selector_nth=0; start_selector_hide=yes' -H 'Origin: http://monitoring.krakow.pios.gov.pl' -H 'Accept-Encoding: gzip, deflate' -H 'Accept-Language: pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Referer: http://monitoring.krakow.pios.gov.pl/dane-pomiarowe/automatyczne' -H 'X-Requested-With: XMLHttpRequest' -H 'Connection: keep-alive' --data 'query=%7B%22measType%22%3A%22Auto%22%2C%22viewType%22%3A%22Parameter%22%2C%22dateRange%22%3A%22Day%22%2C%22date%22%3A%2230.11.2015%22%2C%22viewTypeEntityId%22%3A%22pm10%22%2C%22channels%22%3A%5B46%2C148%2C57%5D%7D' --compressed
-        // curl -i -X POST -d "query=%7B%27measType%27%3A%27Auto%27%2C%27viewType%27%3A%27Parameter%27%2C%27dateRange%27%3A%27Day%27%2C%27date%27%3A%2729.11.2015%27%2C%27viewTypeEntityId%27%3A%27pm10%27%2C%27channels%27%3A%5B46%2C148%2C57%5D%7D" -H "X-Requested-With:XMLHttpRequest" -H "Referer:http://monitoring.krakow.pios.gov.pl/dane-pomiarowe/automatyczne" -H "Content-Type:application/x-www-form-urlencoded; charset=UTF-8" -H "Origin:http://monitoring.krakow.pios.gov.pl" -H "User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.73 Safari/537.36" -H "Accept:application/json, text/javascript, */*; q=0.01" -H "Connection:keep-alive" -H "Accept-Encoding:gzip, deflate" -H "Accept-Language:pl-PL,pl;q=0.8,en-US;q=0.6,en;q=0.4" "http://monitoring.krakow.pios.gov.pl/dane-pomiarowe/pobierz"
-
+        var json = JSONObject(response!!.body().string())
+        var data = json.optJSONObject("data")!!.optJSONArray("series")
+        (0..data!!.length()).forEach {
+            var item = data.optJSONObject(it)
+            if (item != null && item.has("label") && item.has("data")) {
+                d(item.toString())
+                var station = Constants.Place.byLabel(item!!.optString("label"))
+                var records = item.optJSONArray("data")
+                (0..records!!.length()).forEach {
+                    var record = records.optJSONArray(it)
+                    if (record != null && record.length() == 2) {
+                        d(record.toString())
+                        var calendar = DateTime((record[0] as String).toLong() * 1000L)
+                        d(calendar.toString())
+                        batch.add(ContentProviderOperation
+                                .newInsert(AppContract.Readings.CONTENT_URI)
+                                .withValue(AppContract.Readings.AMOUNT, record[1])
+                                .withValue(AppContract.Readings.DATE, Constants.JSON_DATE_FORMAT.format(calendar.toDate()))
+                                .withValue(AppContract.Readings.YEAR, calendar.year().get())
+                                .withValue(AppContract.Readings.MONTH, calendar.monthOfYear().get())
+                                .withValue(AppContract.Readings.DAY, calendar.dayOfMonth().get())
+                                .withValue(AppContract.Readings.HOUR, calendar.hourOfDay().get())
+                                .withValue(AppContract.Readings.PLACE, station.ordinal)
+                                .build())
+                    }
+                }
+            }
+        }
+        if (batch.size > 0) {
+            d("Adding ${batch.size} new items")
+            contentResolver.applyBatch(AppContract.AUTHORITY, batch.toArrayList())
+            contentResolver.notifyChange(AppContract.Readings.CONTENT_URI, null)
+            WidgetProvider.refreshWidgets(this)
+        }
     }
 
     private fun getClient(): OkHttpClient {

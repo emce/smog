@@ -7,18 +7,16 @@ import android.appwidget.AppWidgetProviderInfo
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.database.DatabaseUtils
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.widget.RemoteViews
 import mobi.cwiklinski.bloodline.ui.extension.IntentFor
-import mobi.cwiklinski.bloodline.ui.extension.d
 import mobi.cwiklinski.smog.R
 import mobi.cwiklinski.smog.config.Constants
 import mobi.cwiklinski.smog.database.AppContract
 import mobi.cwiklinski.smog.database.Reading
 import mobi.cwiklinski.smog.ui.activity.MainActivity
+import org.joda.time.DateTime
 import java.util.*
 
 
@@ -35,12 +33,14 @@ class WidgetProvider : AppWidgetProvider() {
         }
 
         public fun fillWidgetViews(context: Context, remoteViews: RemoteViews) {
+            var date = DateTime()
             var sortOrder =  "${AppContract.Readings.YEAR} DESC, ${AppContract.Readings.MONTH} DESC,"+
-                    " ${AppContract.Readings.DAY} DESC, ${AppContract.Readings.HOUR} DESC lIMIT 3"
-            var data = context.contentResolver.query(AppContract.Readings.CONTENT_URI, null, null, null, sortOrder)
+                    " ${AppContract.Readings.DAY} DESC, ${AppContract.Readings.HOUR} DESC LIMIT 3"
+            var selection = "${AppContract.Readings.YEAR}=? AND ${AppContract.Readings.MONTH}=? AND ${AppContract.Readings.DAY}=?"
+            var selectionArgs = arrayOf(date.year().get().toString(), date.monthOfYear().get().toString(), date.dayOfMonth().get().toString())
+            var data = context.contentResolver.query(AppContract.Readings.CONTENT_URI, null, selection, selectionArgs, sortOrder)
             try {
                 var records = ArrayList<Reading>()
-                d(DatabaseUtils.dumpCursorToString(data))
                 while (data.moveToNext()) {
                     records.add(Reading.fromCursor(data))
                 }
@@ -51,33 +51,18 @@ class WidgetProvider : AppWidgetProvider() {
                             remoteViews.setTextViewText(R.id.widgetTime0, "${it.hour}.00")
                             remoteViews.setTextViewText(R.id.widgetValue0,
                                     context.getString(R.string.value_value).format(it.amount))
-                            try {
-                                remoteViews.setTextColor(R.id.widgetValue0, Color.parseColor("#${it.color}"))
-                            } catch(e: IllegalArgumentException) {
-                                e.printStackTrace()
-                            }
                             sum += it.amount
                         }
                         Constants.Place.NOWA_HUTA.ordinal -> {
                             remoteViews.setTextViewText(R.id.widgetTime1, "${it.hour}.00")
                             remoteViews.setTextViewText(R.id.widgetValue1,
                                     context.getString(R.string.value_value).format(it.amount))
-                            try {
-                                remoteViews.setTextColor(R.id.widgetValue1, Color.parseColor("#${it.color}"))
-                            } catch(e: IllegalArgumentException) {
-                                e.printStackTrace()
-                            }
                             sum += it.amount
                         }
                         Constants.Place.KURDWANOW.ordinal -> {
                             remoteViews.setTextViewText(R.id.widgetTime2, "${it.hour}.00")
                             remoteViews.setTextViewText(R.id.widgetValue2,
                                     context.getString(R.string.value_value).format(it.amount))
-                            try {
-                                remoteViews.setTextColor(R.id.widgetValue2, Color.parseColor("#${it.color}"))
-                            } catch(e: IllegalArgumentException) {
-                                e.printStackTrace()
-                            }
                             sum += it.amount
                         }
                     }

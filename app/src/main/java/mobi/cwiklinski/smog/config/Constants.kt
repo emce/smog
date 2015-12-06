@@ -18,6 +18,8 @@ object Constants {
 
     public val JSON_DATE_FORMAT = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
+    public val REFRESH_DATE_FORMAT = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+
     public val PM10_NORM = 50
 
     public val KEY_COOKIES = "cookies"
@@ -28,9 +30,9 @@ object Constants {
     }
 
     enum class Place(val label: String) {
-        KRASINSKIEGO("Al. Krasińskiego"),
-        NOWA_HUTA("ul. Bulwarowa"),
-        KURDWANOW("ul. Bujaka");
+        KRASINSKIEGO("Aleja Krasińskiego"),
+        NOWA_HUTA("Nowa Huta"),
+        KURDWANOW("Kraków-Kurdwanów");
 
         companion object {
             fun byLabel(label: String): Place {

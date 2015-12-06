@@ -8,9 +8,4 @@
     <string name="station_2">ulica Bujaka</string>
     <string name="value_zero">0.0&#181;g</string>
     <string name="value_value">%1$d &#181;g</string>
-
-    <!-- Widget -->
-    <string name="widget_station_0">CENTRUM\nKrasińskiego</string>
-    <string name="widget_station_1">NOWAHUTA\nBulwarowa</string>
-    <string name="widget_station_2">KURDWANÓW\nBujaka</string>
 </resources>

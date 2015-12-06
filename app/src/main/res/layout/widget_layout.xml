@@ -33,7 +33,7 @@
             style="@style/AppWidget.Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/widget_station_0" />
+            android:text="@string/station_0" />
 
     </FrameLayout>
 
@@ -62,7 +62,7 @@
             style="@style/AppWidget.Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/widget_station_1" />
+            android:text="@string/station_1" />
 
     </FrameLayout>
 
@@ -91,7 +91,9 @@
             style="@style/AppWidget.Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/widget_station_2" />
+            android:lines="2"
+            android:gravity="center"
+            android:text="@string/station_2" />
 
     </FrameLayout>
 
