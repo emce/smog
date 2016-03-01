@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:ignore="MissingPrefix"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mainRoot"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:ignore="MissingPrefix">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:theme="@style/Toolbar" />
+        android:theme="@style/Toolbar"/>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="1"
         android:layout_gravity="center"
-        app:cardElevation="@dimen/margin_tiny"
-        app:cardCornerRadius="@dimen/margin_pico">
+        android:layout_weight="1"
+        app:cardCornerRadius="@dimen/margin_pico"
+        app:cardElevation="@dimen/margin_tiny">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/divider"
             android:orientation="vertical"
-            android:background="@android:color/white">
+            android:padding="@dimen/margin_small">
 
-            <org.eazegraph.lib.charts.ValueLineChart
+            <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/mainChart"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:egUseCubic="true"
-                app:egUseOverlapFill="true"
-                app:egCurveSmoothness="0.25"
-                app:egLegendHeight="40dp" />
+                android:layout_height="match_parent"/>
 
         </LinearLayout>
 
@@ -50,14 +48,15 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
             android:layout_gravity="top"
-            app:cardElevation="@dimen/margin_tiny"
-            app:cardCornerRadius="@dimen/margin_pico">
+            android:layout_margin="@dimen/margin_small"
+            app:cardCornerRadius="@dimen/margin_pico"
+            app:cardElevation="@dimen/margin_tiny">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/divider"
                 android:orientation="vertical"
                 android:padding="@dimen/margin_small">
 
@@ -70,30 +69,30 @@
                         style="@style/Card.Header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/station_0" />
+                        android:text="@string/station_0"/>
 
                     <TextView
-                        style="@style/Card.Value"
                         android:id="@+id/mainAmount0"
+                        style="@style/Card.Value"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/value_zero" />
+                        android:layout_weight="1" />
 
                     <TextView
-                        style="@style/Card.Time"
                         android:id="@+id/mainTime0"
+                        style="@style/Card.Time"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="11:00" />
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
                 <ProgressBar
-                    style="@style/ProgressBar"
                     android:id="@+id/mainValue0"
+                    style="@style/ProgressBar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="0" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -104,30 +103,30 @@
                         style="@style/Card.Header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/station_1" />
+                        android:text="@string/station_1"/>
 
                     <TextView
-                        style="@style/Card.Value"
                         android:id="@+id/mainAmount1"
+                        style="@style/Card.Value"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/value_zero" />
+                        android:layout_weight="1" />
 
                     <TextView
-                        style="@style/Card.Time"
                         android:id="@+id/mainTime1"
+                        style="@style/Card.Time"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="11:00" />
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
                 <ProgressBar
-                    style="@style/ProgressBar"
                     android:id="@+id/mainValue1"
+                    style="@style/ProgressBar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="0" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -138,30 +137,98 @@
                         style="@style/Card.Header"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/station_2" />
+                        android:text="@string/station_2"/>
 
                     <TextView
-                        style="@style/Card.Value"
                         android:id="@+id/mainAmount2"
+                        style="@style/Card.Value"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/value_zero" />
+                        android:layout_weight="1" />
 
                     <TextView
-                        style="@style/Card.Time"
                         android:id="@+id/mainTime2"
+                        style="@style/Card.Time"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:text="11:00" />
+                        android:layout_height="wrap_content" />
 
                 </LinearLayout>
 
                 <ProgressBar
-                    style="@style/ProgressBar"
                     android:id="@+id/mainValue2"
+                    style="@style/ProgressBar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="0" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Card.Header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/station_3"/>
+
+                    <TextView
+                        android:id="@+id/mainAmount3"
+                        style="@style/Card.Value"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/mainTime3"
+                        style="@style/Card.Time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/mainValue3"
+                    style="@style/ProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="0" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/Card.Header"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/station_4"/>
+
+                    <TextView
+                        android:id="@+id/mainAmount4"
+                        style="@style/Card.Value"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/mainTime4"
+                        style="@style/Card.Time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/mainValue4"
+                    style="@style/ProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="100"
+                    android:progress="0" />
 
             </LinearLayout>
 

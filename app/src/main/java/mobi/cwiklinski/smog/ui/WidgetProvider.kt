@@ -51,18 +51,24 @@ class WidgetProvider : AppWidgetProvider() {
                             remoteViews.setTextViewText(R.id.widgetTime0, "${it.hour}.00")
                             remoteViews.setTextViewText(R.id.widgetValue0,
                                     context.getString(R.string.value_value).format(it.amount))
+                            remoteViews.setTextColor(R.id.widgetValue0,
+                                    context.resources.getColor(Constants.Color.getResource(it.amount)))
                             sum += it.amount
                         }
                         Constants.Place.NOWA_HUTA.ordinal -> {
                             remoteViews.setTextViewText(R.id.widgetTime1, "${it.hour}.00")
                             remoteViews.setTextViewText(R.id.widgetValue1,
                                     context.getString(R.string.value_value).format(it.amount))
+                            remoteViews.setTextColor(R.id.widgetValue1,
+                                    context.resources.getColor(Constants.Color.getResource(it.amount)))
                             sum += it.amount
                         }
                         Constants.Place.KURDWANOW.ordinal -> {
                             remoteViews.setTextViewText(R.id.widgetTime2, "${it.hour}.00")
                             remoteViews.setTextViewText(R.id.widgetValue2,
                                     context.getString(R.string.value_value).format(it.amount))
+                            remoteViews.setTextColor(R.id.widgetValue2,
+                                    context.resources.getColor(Constants.Color.getResource(it.amount)))
                             sum += it.amount
                         }
                     }

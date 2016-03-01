@@ -89,7 +89,7 @@ class ReadingService : IntentService(ReadingService::class.java.simpleName) {
         }
         if (batch.size > 0) {
             d("Adding ${batch.size} new items")
-            contentResolver.applyBatch(AppContract.AUTHORITY, batch.toArrayList())
+            contentResolver.applyBatch(AppContract.AUTHORITY, batch)
             contentResolver.notifyChange(AppContract.Readings.CONTENT_URI, null)
             WidgetProvider.refreshWidgets(this)
         }
@@ -97,7 +97,7 @@ class ReadingService : IntentService(ReadingService::class.java.simpleName) {
 
     private fun fetchDay() {
         val batch = ArrayList<ContentProviderOperation>()
-        var query: String = "{\"measType\":\"Auto\",\"viewType\":\"Parameter\",\"dateRange\":\"Day\",\"date\":\"${Constants.REFRESH_DATE_FORMAT.format(Date())}\",\"viewTypeEntityId\":\"pm10\",\"channels\":[46,148,57]}"
+        var query: String = "{\"measType\":\"Auto\",\"viewType\":\"Parameter\",\"dateRange\":\"Day\",\"date\":\"${Constants.REFRESH_DATE_FORMAT.format(Date())}\",\"viewTypeEntityId\":\"pm10\",\"channels\":[46,1752,148,1723]}"
         var headers = mapOf(
                 Pair("Accept", "application/json, text/javascript, */*; q=0.01"),
                 Pair("Origin", "http://monitoring.krakow.pios.gov.pl"),
@@ -145,7 +145,7 @@ class ReadingService : IntentService(ReadingService::class.java.simpleName) {
         }
         if (batch.size > 0) {
             d("Adding ${batch.size} new items")
-            contentResolver.applyBatch(AppContract.AUTHORITY, batch.toArrayList())
+            contentResolver.applyBatch(AppContract.AUTHORITY, batch)
             contentResolver.notifyChange(AppContract.Readings.CONTENT_URI, null)
             WidgetProvider.refreshWidgets(this)
         }

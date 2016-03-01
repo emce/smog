@@ -58,7 +58,7 @@
     <style name="AppWidget.Label" parent="TextAppearance.AppCompat.Headline">
         <item name="android:textSize">@dimen/text_small</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/primary_light</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:layout_gravity">center_horizontal|bottom</item>
     </style>
 
@@ -82,6 +82,7 @@
         <item name="android:textSize">@dimen/text_small</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_gravity">center_horizontal|top</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">

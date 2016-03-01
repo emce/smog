@@ -1,14 +1,11 @@
 package mobi.cwiklinski.smog.ui.activity
 
 import android.content.Intent
-import android.database.Cursor
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
-import android.support.v4.app.LoaderManager
-import android.support.v4.content.CursorLoader
-import android.support.v4.content.Loader
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
@@ -21,24 +18,18 @@ import com.facebook.share.model.SharePhotoContent
 import com.facebook.share.widget.ShareDialog
 import com.joanzapata.iconify.IconDrawable
 import com.joanzapata.iconify.fonts.TypiconsIcons
-import kotlinx.android.synthetic.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.*
+import lecho.lib.hellocharts.model.LineChartData
+import lecho.lib.hellocharts.model.Viewport
 import mobi.cwiklinski.bloodline.ui.extension.setToolbar
-import mobi.cwiklinski.bloodline.ui.extension.startLoader
 import mobi.cwiklinski.smog.R
-import mobi.cwiklinski.smog.config.Constants
-import mobi.cwiklinski.smog.database.AppContract
-import mobi.cwiklinski.smog.database.Reading
+import mobi.cwiklinski.smog.model.MainViewModel
 import mobi.cwiklinski.smog.service.ReadingService
-import mobi.cwiklinski.smog.ui.WidgetProvider
-import org.eazegraph.lib.models.LegendModel
-import org.eazegraph.lib.models.ValueLinePoint
-import org.eazegraph.lib.models.ValueLineSeries
-import org.joda.time.DateTime
-import java.util.*
 
-class MainActivity : LoaderManager.LoaderCallbacks<Cursor>, AppCompatActivity() {
+class MainActivity : MainViewModel.MainViewModelListener, AppCompatActivity() {
 
     var callbackManager = CallbackManager.Factory.create()
+    var viewModel = MainViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,13 +37,82 @@ class MainActivity : LoaderManager.LoaderCallbacks<Cursor>, AppCompatActivity() 
         setToolbar()
         ReadingService.refresh(this)
         FacebookSdk.sdkInitialize(applicationContext);
-        mainChart.emptyDataText = getString(R.string.no_data)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        startLoader(Constants.LOADER_LATEST, this)
-        startLoader(Constants.LOADER_GRAPH, this)
+        viewModel.listener = this
+        mainChart.isZoomEnabled = false
+        viewModel.mainAmount0Text.subscribe()
+        viewModel.mainAmount1Text.subscribe({
+            mainAmount1.text = it
+        })
+        viewModel.mainAmount2Text.subscribe({
+            mainAmount2.text = it
+        })
+        viewModel.mainAmount3Text.subscribe({
+            mainAmount3.text = it
+        })
+        viewModel.mainAmount4Text.subscribe({
+            mainAmount4.text = it
+        })
+        viewModel.mainTime0Text.subscribe({
+            mainTime0.text = it
+        })
+        viewModel.mainTime1Text.subscribe({
+            mainTime1.text = it
+        })
+        viewModel.mainTime2Text.subscribe({
+            mainTime2.text = it
+        })
+        viewModel.mainTime3Text.subscribe({
+            mainTime3.text = it
+        })
+        viewModel.mainTime4Text.subscribe({
+            mainTime4.text = it
+        })
+        viewModel.progress0Color.subscribe({
+            setProgressColor(it, mainValue0)
+        })
+        viewModel.progress1Color.subscribe({
+            setProgressColor(it, mainValue1)
+        })
+        viewModel.progress2Color.subscribe({
+            setProgressColor(it, mainValue2)
+        })
+        viewModel.progress3Color.subscribe({
+            setProgressColor(it, mainValue3)
+        })
+        viewModel.progress4Color.subscribe({
+            setProgressColor(it, mainValue4)
+        })
+        viewModel.progress0Value.subscribe({
+            mainValue0.progress = it
+        })
+        viewModel.progress1Value.subscribe({
+            mainValue1.progress = it
+        })
+        viewModel.progress2Value.subscribe({
+            mainValue2.progress = it
+        })
+        viewModel.progress3Value.subscribe({
+            mainValue3.progress = it
+        })
+        viewModel.progress4Value.subscribe({
+            mainValue4.progress = it
+        })
+        viewModel.progress0Max.subscribe({
+            mainValue0.max = it
+        })
+        viewModel.progress1Max.subscribe({
+            mainValue1.max = it
+        })
+        viewModel.progress2Max.subscribe({
+            mainValue2.max = it
+        })
+        viewModel.progress3Max.subscribe({
+            mainValue3.max = it
+        })
+        viewModel.progress4Max.subscribe({
+            mainValue4.max = it
+        })
+        viewModel.queryForData()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -91,109 +151,24 @@ class MainActivity : LoaderManager.LoaderCallbacks<Cursor>, AppCompatActivity() 
         }
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor>? {
-        var loader = CursorLoader(this)
-        var date = DateTime()
-        when (id) {
-            Constants.LOADER_LATEST -> {
-                loader.uri = AppContract.Readings.CONTENT_URI
-                loader.selection = "${AppContract.Readings.YEAR}=? AND ${AppContract.Readings.MONTH}=? AND ${AppContract.Readings.DAY}=?"
-                loader.selectionArgs = arrayOf(date.year().get().toString(), date.monthOfYear().get().toString(), date.dayOfMonth().get().toString())
-                loader.sortOrder =  "${AppContract.Readings.DAY} DESC, ${AppContract.Readings.HOUR} DESC LIMIT 3"
-            }
-            Constants.LOADER_GRAPH -> {
-                loader.uri = AppContract.Readings.CONTENT_URI
-                loader.selection = "${AppContract.Readings.YEAR}=? AND ${AppContract.Readings.MONTH}=? AND ${AppContract.Readings.DAY}=?"
-                loader.selectionArgs = arrayOf(date.year().get().toString(), date.monthOfYear().get().toString(), date.dayOfMonth().get().toString())
-                loader.sortOrder =  "${AppContract.Readings.DAY} DESC, ${AppContract.Readings.HOUR} ASC LIMIT 30"
-            }
-        }
-        return loader
+    override fun onGraphDataLoaded(chartData: LineChartData, min: Float?, max: Float?) {
+        mainChart.lineChartData = chartData
+        var v = Viewport(mainChart.maximumViewport);
+        v.bottom = min!!.minus(5f)
+        v.top = max!!.plus(5f)
+        mainChart.maximumViewport = v
+        mainChart.setCurrentViewportWithAnimation(v)
     }
 
-    override fun onLoaderReset(loader: Loader<Cursor>?) {
-
-    }
-
-    override fun onLoadFinished(loader: Loader<Cursor>?, data: Cursor?) {
-        when (loader!!.id) {
-            Constants.LOADER_LATEST -> {
-                var max = Constants.PM10_NORM
-                var records = ArrayList<Reading>()
-                while (data!!.moveToNext()) {
-                    var readings = Reading.fromCursor(data)
-                    records.add(readings)
-                    max = Math.max(max, readings.amount)
-                }
-                max = ((max + 99) / 100 ) * 100
-                records.forEach {
-                    when (it.place) {
-                        Constants.Place.KRASINSKIEGO.ordinal -> {
-                            mainTime0.text = "${it.hour}.00"
-                            mainAmount0.text = getString(R.string.value_value).format(it.amount)
-                            mainValue0.max = max
-                            mainValue0.progress = it.amount
-                        }
-                        Constants.Place.NOWA_HUTA.ordinal -> {
-                            mainTime1.text = "${it.hour}.00"
-                            mainAmount1.text = getString(R.string.value_value).format(it.amount)
-                            mainValue1.max = max
-                            mainValue1.progress = it.amount
-                        }
-                        Constants.Place.KURDWANOW.ordinal -> {
-                            mainTime2.text = "${it.hour}.00"
-                            mainAmount2.text = getString(R.string.value_value).format(it.amount)
-                            mainValue2.max = max
-                            mainValue2.progress = it.amount
-                        }
-                    }
-                }
-                WidgetProvider.refreshWidgets(this)
-            }
-            Constants.LOADER_GRAPH -> {
-                var series0 = ValueLineSeries()
-                series0.color = resources.getColor(R.color.red)
-                var series1 = ValueLineSeries()
-                series1.color = resources.getColor(R.color.green)
-                var series2 = ValueLineSeries()
-                series2.color = resources.getColor(R.color.blue)
-                while (data!!.moveToNext()) {
-                    var readings = Reading.fromCursor(data)
-                    when (readings.place) {
-                        Constants.Place.KRASINSKIEGO.ordinal -> {
-                            series0.addPoint(ValueLinePoint("${readings.hour}.00", readings.amount * 1f))
-                        }
-                        Constants.Place.NOWA_HUTA.ordinal -> {
-                            series1.addPoint(ValueLinePoint("${readings.hour}.00", readings.amount * 1f))
-                        }
-                        Constants.Place.KURDWANOW.ordinal -> {
-                            series2.addPoint(ValueLinePoint("${readings.hour}.00", readings.amount * 1f))
-                        }
-                    }
-                }
-                if (series0.series.size > 1) {
-                    var legends = listOf(
-                        LegendModel(getString(R.string.station_0)),
-                        LegendModel(getString(R.string.station_1)),
-                        LegendModel(getString(R.string.station_2))
-                    )
-                    mainChart.addLegend(legends)
-                    mainChart.addSeries(series0)
-                    mainChart.addSeries(series1)
-                    mainChart.addSeries(series2)
-                    mainChart.startAnimation()
-                }
-            }
-        }
-    }
-
-    private fun setProgressColor(color: String?, progress: ProgressBar) {
-        if (color != null && !color!!.isEmpty()) {
+    private fun setProgressColor(color: Int, progress: ProgressBar) {
+        try {
             if (progress.progressDrawable!! is LayerDrawable) {
                 var layerDrawable = progress.progressDrawable as LayerDrawable;
                 var progressDrawable = layerDrawable.findDrawableByLayerId(android.R.id.progress)
-                progressDrawable.setColorFilter(Color.parseColor("#$color"), PorterDuff.Mode.SRC_IN)
+                progressDrawable.setColorFilter(resources.getColor(color), PorterDuff.Mode.SRC_IN)
             }
+        } catch (e : Resources.NotFoundException) {
+            e.printStackTrace()
         }
     }
 }

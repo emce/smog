@@ -7,14 +7,13 @@ import com.orhanobut.hawk.Hawk
 import com.orhanobut.hawk.HawkBuilder
 import com.orhanobut.hawk.LogLevel
 import de.greenrobot.event.EventBus
-import mobi.cwiklinski.bloodline.ui.extension.DelegatesExt
 
 class App : Application() {
 
     val eventBus = EventBus.getDefault()
 
     companion object {
-        var instance: App by DelegatesExt.notNullSingleValue()
+        lateinit var instance: App
         fun get(): App {
             return instance
         }

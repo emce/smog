@@ -13,6 +13,7 @@
     <dimen name="margin_pico">2dip</dimen>
 
     <!-- TEXTS -->
+    <dimen name="text_pico">5sp</dimen>
     <dimen name="text_tiny">8sp</dimen>
     <dimen name="text_small">10sp</dimen>
     <dimen name="text_normal">12sp</dimen>

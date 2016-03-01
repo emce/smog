@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">Smog</string>
     <string name="no_data">Na chwilę obecną brak danych</string>
+    <string name="unit">&#181;g</string>
 
     <!-- Data -->
     <string name="station_0">aleja Krasińskiego</string>
     <string name="station_1">ulica Bulwarowa</string>
     <string name="station_2">ulica Bujaka</string>
+    <string name="station_3">ulica Dietla</string>
+    <string name="station_4">ulica Złoty Róg</string>
     <string name="value_zero">0.0&#181;g</string>
     <string name="value_value">%1$d &#181;g</string>
 </resources>
